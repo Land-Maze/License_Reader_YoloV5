@@ -1,5 +1,6 @@
 #!/bin/bash
 BASE_DIR=$(dirname $(readlink -f $0))
+cd $BASE_DIR/License_Reader_YoloV5
 python3 -m venv env
 source env/bin/activate
 pip3 install -r requirements.txt
