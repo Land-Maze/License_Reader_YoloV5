@@ -1,0 +1,2 @@
+CONFIG:
+    CONFIDENCE_THRESHOLD - Min confidence of model prediction 

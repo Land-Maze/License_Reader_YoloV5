@@ -1,0 +1,6 @@
+{
+    "CONFIDENCE_THRESHOLD": 0.4,
+    "MODEL_PATH": "/Users/land_maze/Desktop/Projects/Personal/License_Reader_YoloV5/django/api/scripts/model/yolov5_small_weight_gray.pt",
+    "EASY_OCR_THRESHOLD": 0.5,
+    "HUB_PATH": "/Users/land_maze/Desktop/Projects/Personal/License_Reader_YoloV5/django/api/scripts/yolov5"
+}
