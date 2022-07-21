@@ -1,6 +1,6 @@
 #!/bin/bash
 BASE_DIR=$(dirname $(readlink -f $0))
-python3 -m venv -p python3 env
+python3 -m venv env
 source env/bin/activate
 pip3 install -r requirements.txt
 cd $BASE_DIR/django/api/scripts/
