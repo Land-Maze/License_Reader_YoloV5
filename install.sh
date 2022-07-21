@@ -1,5 +1,5 @@
 #!/bin/bash
-BASE_DIR = $(dirname $(readlink -f $0))
+BASE_DIR=$(dirname $(readlink -f $0))
 pip3 install venv
 virtualenv -p python3 env
 source env/bin/activate
