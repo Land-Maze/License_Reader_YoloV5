@@ -1,15 +1,10 @@
 # License Reader with YoloV5 weight pre-trained by myself
 
-<<<<<<< HEAD
-=======
----
-
->>>>>>> origin/master
 ## [Install guide](#install_guide)
 #### 1. [Project install](#project_install)
 #### 2. [PyTorch install Mac M1](#torch_mac_install)
 
-## [Usage guide]()
+## [Usage guide](#usage_guide)
 #### 1. [How to run server](#django_run)
 #### 2. [API documentation](#api_docs)
 
@@ -78,6 +73,8 @@ conda install pytorch torchvision torchaudio -c pytorch-nightly
 ```
 
 ---
+
+<a name="usage_guide"></a>
 
 <a name="django_run"><h2>How to run server</h2></a>
 
