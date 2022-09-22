@@ -1,10 +1,5 @@
 # License Reader with YoloV5 weight pre-trained by myself
 
-<<<<<<< HEAD
-=======
----
-
->>>>>>> origin/master
 ## [Install guide](#install_guide)
 #### 1. [Project install](#project_install)
 #### 2. [PyTorch install Mac M1](#torch_mac_install)
