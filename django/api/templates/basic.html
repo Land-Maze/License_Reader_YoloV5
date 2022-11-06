@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Django API">
+    <style>
+        h1{
+            color: rgba(255, 122, 122, 0.5);
+        }
+        a{
+            text-decoration: none;
+            color: aliceblue;
+            transition: all 0.3s ease-in-out;
+        }
+        a:hover{
+            color: #ff6f00;
+            transition: all 0.3s ease-in-out;
+        }
+        body{
+            background-color: #808080;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-flow: column;
+            overflow: hidden;
+            height: 100vh;
+        }
+        body > nav{
+            flex: 0 1 auto;
+            background-color: #000000;
+            color: #ffffff;
+            padding: 1rem;
+            display: flex;
+            flex-flow: row;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        body > div#content{
+            display: flex;
+            flex: 1 1 auto;
+            flex-flow: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            height: 100%;
+            width: 100%;
+        }
+        #video_feed > img{
+            max-width:auto;
+            height:100%;
+            margin: 0;
+        }
+        .active{
+            color: #5359ff;
+        }
+    </style>
+    <title>{% block title %}Car Reader{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <h1>Car Reader</h1>
+            <a href="video_feed" class="{% if path == "/video_feed" %} active {% endif %}">Video Feed</a>
+            <a href="database" class="{% if path == "/database" %} active {% endif %}">Database</a>
+            <a href="settings" class="{% if path == "/settings" %} active {% endif %}">Settings</a>
+    </nav>
+
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

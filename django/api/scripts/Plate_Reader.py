@@ -15,6 +15,13 @@ class Plate_Reader(object):
         def __init__(self, Plate_Reader) -> None:
             self._pl = Plate_Reader
         
+        
+            """_summary_
+            Creating box with given coordinates
+
+            Returns:
+                _type_: _description_
+            """
         def _plot_boxes(self, frame: cv2.Mat, result: Tuple[torch.Tensor, torch.Tensor], classes: List[str]) -> Tuple[List[str], cv2.Mat]:
             labels, cnt = result
             x_shape, y_shape = frame.shape[1], frame.shape[0]
@@ -121,4 +128,5 @@ class Plate_Reader(object):
         model_result = self.detectx(frame)
         plate, frame = self._Draw._plot_boxes(frame, model_result, ["license"])
         
+        cv2.imwrite("frame.jpg", frame)
         return (frame, plate)

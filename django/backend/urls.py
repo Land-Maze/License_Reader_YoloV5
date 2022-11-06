@@ -20,6 +20,10 @@ from api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/license_plate', views.license_plate),
+    path('video_frames', views.video_frames),
+    path('database', views.database),
+    path('settings', views.settings),
     path('video_feed', views.video_feed),
+    path('api/license_plate', views.license_plate),
+    path('api/license_record', views.license_records)
 ]

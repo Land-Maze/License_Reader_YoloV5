@@ -4,7 +4,7 @@ from django.db import models
 
 class License(models.Model):
     license_number = models.CharField(max_length=100, blank=True, primary_key=True)
-    last_seen = models.DateTimeField(auto_now_add=False)
+    last_seen = models.DateTimeField(auto_now_add=False, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
