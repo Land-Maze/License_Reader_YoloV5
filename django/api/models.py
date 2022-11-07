@@ -12,7 +12,7 @@ class License(models.Model):
     
     
 class License_Detect(models.Model):
-    id = models.AutoField(primary_key=True, default=0)
+    id = models.AutoField(primary_key=True)
     license_number = models.ForeignKey(License, on_delete=models.CASCADE, unique=False)
     in_out = models.CharField(max_length=3, blank=False)
     camera_feed_id = models.IntegerField(blank=False)
