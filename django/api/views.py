@@ -34,6 +34,13 @@ def video_feed(request):
 
 def database(request):
     
+    return render(request, 'api/database.html', {"path": request.path}, content_type='text/html')
+
+def settings(request):
+    return render(request, 'api/settings.html', {"path": request.path}, content_type='text/html')
+
+def records(request):
+    
     def get_licenses() -> list:
         licenses = list(License.objects.values())
         return licenses
@@ -42,10 +49,7 @@ def database(request):
         records = list(License_Detect.objects.filter(filter).values())
         return records
     
-    return render(request, 'api/database.html', {"path": request.path, "getLicenses": get_licenses, "getRecords": get_records}, content_type='text/html')
-
-def settings(request):
-    return render(request, 'api/settings.html', {"path": request.path}, content_type='text/html')
+    return render(request, 'api/records.html', {"path": request.path}, content_type='text/html')
 
 
 def license_plate(request):

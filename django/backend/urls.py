@@ -21,6 +21,7 @@ from api import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('video_frames', views.video_frames),
+    path('records', views.records),
     path('database', views.database),
     path('settings', views.settings),
     path('video_feed', views.video_feed),
