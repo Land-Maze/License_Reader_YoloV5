@@ -28,12 +28,13 @@ def addPlateRecord(license_number: str, in_out: str, camera_feed_id: int, COOLDO
     last_record_time_unix = int(mktime(last_record['created'].timetuple()))
     
     if(time() - last_record_time_unix < COOLDOWN_TIME):
-        print("Record already exists")
+        print("Cooldown time not passed")
         return
     
-    print("Record added")
-    
+    print("Adding record")
     model.objects.create(license_number=license_istance, in_out=in_out, camera_feed_id=camera_feed_id)
+
+
 
 def check_frames(config, camera: VideoCapture, in_out: str, camera_feed_id: int):
     PL = Plate_Reader(config=config, camera=camera)
@@ -60,10 +61,11 @@ def check_frames(config, camera: VideoCapture, in_out: str, camera_feed_id: int)
                 plate = plate.upper().replace(' ', '')
                 print(f"Plate_Number: {plate}")
                 
+                addPlateRecord(plate, in_out, camera_feed_id, config['COOLDOWN_TIME'])
+                
                     
             
         ApiConfig.frame = frame_res
-        addPlateRecord("AK9265AK", in_out, camera_feed_id, config['COOLDOWN_TIME'])
         
         
                 
