@@ -30,14 +30,22 @@ def video_frames(request):
                                 )
 
 def video_feed(request):
-    print(request.path)
-    return render(request, 'api/video_view.html', {"path": request.path})
+    return render(request, 'api/video_view.html', {"path": request.path}, content_type='text/html')
 
 def database(request):
-    return render(request, 'api/database.html', {"path": request.path})
+    
+    def get_licenses() -> list:
+        licenses = list(License.objects.values())
+        return licenses
+    
+    def get_records(filter) -> list:
+        records = list(License_Detect.objects.filter(filter).values())
+        return records
+    
+    return render(request, 'api/database.html', {"path": request.path, "getLicenses": get_licenses, "getRecords": get_records}, content_type='text/html')
 
 def settings(request):
-    return render(request, 'api/settings.html', {"path": request.path})
+    return render(request, 'api/settings.html', {"path": request.path}, content_type='text/html')
 
 
 def license_plate(request):

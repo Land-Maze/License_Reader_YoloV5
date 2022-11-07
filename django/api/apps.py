@@ -47,6 +47,7 @@ def check_frames(config, camera: VideoCapture, in_out: str, camera_feed_id: int)
             plate = res[1][0]
         except(IndexError):
             plate = []
+            
         frame_res = res[0]
         
         if((plate != []) & (plate != [[]])):
@@ -81,8 +82,8 @@ class ApiConfig(AppConfig):
     
     
     def ready(self) -> None:
-        self.check_frames_thread = threading.Thread(target=check_frames, args=(self.config, self.web_cam, "in", 1), daemon=False)
-        self.check_frames_thread.start()
+        # self.check_frames_thread = threading.Thread(target=check_frames, args=(self.config, self.web_cam, "in", 1), daemon=False)
+        # self.check_frames_thread.start()
         return super().ready()
     
         
