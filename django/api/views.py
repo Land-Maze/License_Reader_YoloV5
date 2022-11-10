@@ -34,23 +34,57 @@ def video_feed(request):
 
 def database(request):
     
-    return render(request, 'api/database.html', {"path": request.path}, content_type='text/html')
+    def getLicenses():
+        licenses_temp = list(License.objects.values())
+        licenses = []
+        for item in licenses_temp:
+            tmp1 = item['license_number']
+            try:
+                tmp2 = item['last_seen']
+            except(AttributeError):
+                tmp2 = "None"
+            licenses.append({"number": tmp1, "date": tmp2})
+        
+        return licenses
+        
+    def getRecords():
+        records_temp = list(License_Detect.objects.values())
+        records = []
+        for item in records_temp:
+            records.append({
+                "license_number": item['license_number_id'],
+                "id": item['id'],
+                "date": item['created'].strftime("%d/%m/%Y_%H:%M:%S"),
+                "in_out": item['in_out'],
+                "camera_id": item['camera_feed_id'],
+            })
+        return records
+        
+    
+    return render(request, 'api/database.html', {"path": request.path, "licenses": getLicenses(), "records": getRecords()}, content_type='text/html')
 
 def settings(request):
-    return render(request, 'api/settings.html', {"path": request.path}, content_type='text/html')
+    print(ApiConfig.config)
+    
+    
+    return render(request, 'api/settings.html', {"path": request.path, "config": ApiConfig.config}, content_type='text/html')
 
 def records(request):
     
-    def get_licenses() -> list:
-        licenses = list(License.objects.values())
-        return licenses
-    
-    def get_records(filter) -> list:
-        records = list(License_Detect.objects.filter(filter).values())
+    def getRecords():
+        records_temp = list(License_Detect.objects.values())
+        records = []
+        for item in records_temp:
+            records.append({
+                "lic_num": item['license_number_id'],
+                "id": item['id'],
+                "date": item['created'].strftime("%d/%m/%Y|%H:%M:%S"),
+                "in_out": item['in_out'],
+                "camera_id": item['camera_feed_id'],
+            })
         return records
     
-    return render(request, 'api/records.html', {"path": request.path}, content_type='text/html')
-
+    return render(request, 'api/records.html', {"path": request.path, "records": getRecords()}, content_type='text/html')
 
 def license_plate(request):
     print(request.GET)
@@ -58,7 +92,14 @@ def license_plate(request):
     if request.method == 'GET':
         try:
             if(request.GET.get('license_number') == None):
-                return HttpResponse(json.dumps({"error":"Empty_Querry_String_License_Number"}), content_type='application/json')
+                tmp = list(License.objects.filter().values())
+                result = []
+                for item in tmp:
+                    result.append({
+                        "license_number": item['license_number'],
+                        "created": item['created'].strftime("%d/%m/%Y, %H:%M:%S"),
+                    })
+                return HttpResponse(json.dumps({"license_numbers": result}), content_type='application/json')
             license = model.objects.get(license_number=request.GET.get('license_number'))
             try:
                 last_seen = license.last_seen.strftime('%Y-%m-%d %H:%M:%S')
@@ -79,18 +120,29 @@ def license_plate(request):
         except (json.decoder.JSONDecodeError):
             return HttpResponse(json.dumps({"error": "Invalid JSON"}), status=400, content_type='application/json')
 
+    if request.method == 'DELETE':
+        try:
+            if(request.GET.get('license_number') == None):
+                return HttpResponse(json.dumps({"error":"Empty_Querry_String_License_Number"}), status=400, content_type='application/json')
+            license = model.objects.get(license_number=request.GET.get('license_number'))
+            license.delete()
+            
+            return HttpResponse(json.dumps({}), status=200, content_type='application/json')
+        except (License.DoesNotExist):
+            return HttpResponse(json.dumps({'error': "Not_Found"}), status=404, content_type='application/json')
+
 def license_records(request):
     
     model = License_Detect
     
     if(request.method == 'GET'):
-        # print(request.GET)
         try:
-            if(request.GET == None):
+            
+            if(request.GET == {}):
                 all_records_list = []
                 for item in model.objects.all():
                     all_records_list.append({'id': item.id, 'license_number': item.license_number.license_number, 'in_out': item.in_out, 'camera_feed_id': item.camera_feed_id, 'created': item.created.strftime('%Y-%m-%d %H:%M:%S')})
-                return HttpResponse(json.dumps({all_records_list}), content_type='application/json')
+                return HttpResponse(json.dumps({"records": all_records_list}), content_type='application/json')
 
             if(request.GET.get('license_number') != None):
                 
@@ -143,3 +195,16 @@ def license_records(request):
             return HttpResponse(json.dumps({"error": "License_Does_Not_Exist"}), status=400, content_type='application/json')
         
         return HttpResponse(json.dumps({'license_number': body['license_number'], 'in_out': body['in_out'], 'camera_feed_id': body['camera_feed_id']}), status=201, content_type='application/json')
+    
+    if request.method == 'DELETE':
+        try:
+            if(request.GET.get('id') == None):
+                return HttpResponse(json.dumps({"error":"Empty_Querry_String_Id"}), status=400, content_type='application/json')
+            print(request.GET.get('id'))
+            license = model.objects.get(id=request.GET.get('id'))
+            license.delete()
+            
+            return HttpResponse(json.dumps({}), status=200, content_type='application/json')
+        except (License.DoesNotExist):
+            return HttpResponse(json.dumps({'error': "Not_Found"}), status=404, content_type='application/json')
+

@@ -53,8 +53,8 @@
         div#content > div.container{
             display: flex;
             flex-flow: column;
-            width: 80%;
-            height: 100%;
+            width: 60%;
+            /* height: 100%; */
             background-color: #ffffff;
             padding: 25px;
             border: 2px solid #000000;
@@ -69,27 +69,259 @@
             height: 100%; */
         }
 
+        #choice_content > div{
+            display: flex;
+            flex-flow: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
         #video_feed > img{
             max-width:auto;
             height:100%;
             margin: 0;
         }
-        .active{
+        .active-link{
             color: #5359ff;
         }
+        .active-choice{
+            color:#ff6f00;
+        }
+        #licenses_list{
+            /* display: flex;
+            flex-flow: column; */
+            height: 100%;
+            width: fit-content;
+            min-width: 200px;
+            height: 200px;
+            max-height: 200px;
+            overflow: auto;
+            border: 2px solid #000000;
+        }
+        #licenses_list > div.license_list_item{
+            border-bottom: 2px solid #000000;
+            width: 100%;
+            text-align: center;
+        }
+        #licenses_list > div.license_list_item:last-child{
+            border-bottom: none;
+        }
+        #records_list{
+            /* display: flex;
+            flex-flow: column; */
+            /* width: fit-content; */
+            min-width: 200px;
+            height: 200px;
+            max-height: 200px;
+            overflow: auto;
+            border: 2px solid #000000;
+        }
+        #records_list > div.record_list_item{
+            border-bottom: 2px solid #000000;
+            width: 100%;
+            /* padding: 0 20px; */
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+            cursor: default;
+        }
+        #records_list > div.record_list_item:last-child{
+            border-bottom: none;
+        }
+        .active-record{
+            background-color: #ff6f00;
+            transition: all 0.3s ease-in-out;
+        }
+        #record_view{
+            height: calc(1.3rem * 15);
+            line-height: 1.3rem;
+            margin: 25px;
+            border: 2px solid #000000;
+            overflow: auto;
+        }
+        #record_view > div.record_list_item{
+            border-bottom: 1px solid #000000;
+            transition: all 0.3s ease-in-out;
+        }
+        #record_info{
+            display: flex;
+            justify-content: center;
+        }
+        #record_info > div{
+            padding: 10px;
+            border: 2px solid #000000;
+            width: fit-content;
+        }
+        #settings{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            grid-column-gap: 0px;
+            grid-row-gap: 0px; 
+        }
+        #model_path { grid-area: 1 / 1 / 2 / 2; }
+        #conf_tresh { grid-area: 1 / 2 / 2 / 3; width: 50px; justify-self: center;}
+        #hub_path { grid-area: 2 / 1 / 3 / 2; }
+        #ocr_tresh { grid-area: 2 / 2 / 3 / 3; }
+        #pool_size { grid-area: 3 / 1 / 4 / 2; }
+        #cool_time { grid-area: 3 / 2 / 4 / 3; } 
     </style>
+
     <title>{% block title %}Car Reader{% endblock %}</title>
 </head>
 <body>
     <nav>
         <h1>Car Reader</h1>
-            <a href="video_feed" class="{% if path == "/video_feed" %} active {% endif %}">Video Feed</a>
-            <a href="database" class="{% if path == "/database" %} active {% endif %}">Database</a>
-            <a href="settings" class="{% if path == "/settings" %} active {% endif %}">Settings</a>
+            <a href="video_feed" class="{% if path == "/video_feed" %} active-link {% endif %}">Video Feed</a>
+            <a href="database" class="{% if path == "/database" %} active-link {% endif %}">Database</a>
+            <a href="records" class="{% if path == "/records" %} active-link {% endif %}">Records</a>
+            <!-- <a href="settings" class="{% if path == "/settings" %} active-link {% endif %}">Settings</a> -->
     </nav>
 
     <div id="content">
         {% block content %}{% endblock %}
     </div>
+
+    <script>
+
+        var choice = "license"
+
+        btn_license = document.querySelector('#choices > button#btn_license');
+        btn_record = document.querySelector('#choices > button#btn_record');
+
+        try{
+            btn_license.addEventListener('click', function(){
+                choice = "license";
+                
+                btn_record.classList.remove('active-choice');
+                btn_license.classList.add('active-choice');
+    
+                switchContent()
+            });
+    
+            btn_record.addEventListener('click', function(){
+                choice = "record";
+                
+                btn_license.classList.remove('active-choice');
+                btn_record.classList.add('active-choice');
+    
+                switchContent()
+            });
+        } catch(err){}
+
+        function switchContent(){
+            if(choice == "license"){
+                document.querySelector('#choice_content > div#licenses').style.display = "flex";
+                document.querySelector('#choice_content > div#records').style.display = "none";
+            }else{
+                document.querySelector('#choice_content > div#licenses').style.display = "none";
+                document.querySelector('#choice_content > div#records').style.display = "flex";
+            }
+        }
+
+        function createLicenseHandler(){
+            data = document.getElementById("license_number").value;
+            document.getElementById("license_number").value = "";
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/license_plate", true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({
+                license_number: data
+            }));
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState == 4 && xhr.status == 201){
+                    let response = JSON.parse(xhr.responseText)
+                    document.getElementById("result_license_sub_span").innerHTML = "Created";
+                    document.getElementById("result_license_span").style.color = "green";
+                }
+                if(xhr.readyState == 4 && xhr.status == 409){
+                    let response = JSON.parse(xhr.responseText)
+                    document.getElementById("result_license_sub_span").innerHTML = "Already Exists";
+                    document.getElementById('result_license_span').style.color = "red";
+                }
+            }
+        }
+
+        function deleteLicenseHandler(){
+            data = document.getElementById("license_number").value
+            document.getElementById("license_number").value = "";
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("DELETE", "api/license_plate?license_number=" + data, true);
+            xhr.send();
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    let response = JSON.parse(xhr.responseText)
+                    document.getElementById("result_license_sub_span").innerHTML = "Deleted";
+                    document.getElementById("result_license_span").style.color = "green";
+                }
+                if(xhr.readyState == 4 && xhr.status == 404){
+                    let response = JSON.parse(xhr.responseText)
+                    document.getElementById("result_license_sub_span").innerHTML = "Not Found";
+                    document.getElementById('result_license_span').style.color = "red";
+                }
+            }
+        }
+
+        var active_record = null;
+
+        function switchActiveElementRecord(id){
+            if(active_record != null){
+                document.querySelector(`div[item-id="${active_record} "]`).classList.remove('active-record');
+            }
+            active_record = id;
+            document.querySelector(`div[item-id="${id} "]`).classList.add('active-record');
+
+        }
+
+        function deleteRecordHandler(){
+            if(active_record == null){
+                document.getElementById("result_record_sub_span").innerHTML = "Choose record first";
+                document.getElementById('result_record_span').style.color = "red";
+                return;
+            }
+            var xhr = new XMLHttpRequest();
+            xhr.open("DELETE", "api/license_record?id=" + active_record, true);
+            xhr.send();
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    let response = JSON.parse(xhr.responseText)
+                    document.querySelector(`div[item-id="${active_record} "]`).remove()
+                    active_record = null;
+                    document.getElementById("result_record_sub_span").innerHTML = "Deleted";
+                    document.getElementById("result_record_span").style.color = "green";
+                }
+                if(xhr.readyState == 4 && xhr.status == 404){
+                    let response = JSON.parse(xhr.responseText)
+                    document.getElementById("result_record_sub_span").innerHTML = "Not Found";
+                    document.getElementById('result_record_span').style.color = "red";
+                }
+            }
+        }
+
+        var active_record_view = null;
+
+        function switchRecordInfo(id){
+            if(active_record_view != null){
+                document.querySelector(`div[data-id="${active_record_view}"]`).classList.remove('active-record');
+            }
+            active_record_view = id;
+            active_item = document.querySelector(`div[data-id="${id}"]`)
+            active_item.classList.add('active-record');
+
+            document.getElementById("record_id_span").innerHTML = id;
+            document.getElementById("record_lic_span").innerHTML = active_item.getAttribute("data-lic");
+            document.getElementById("record_time_span").innerHTML = active_item.getAttribute("data-time");
+            document.getElementById("record_dir_span").innerHTML = active_item.getAttribute("data-direction").toUpperCase();
+            document.getElementById("record_cam_span").innerHTML = active_item.getAttribute("data-camera-id");
+        }
+
+        // function saveButtonHandler(){
+            
+        // }
+    </script>
 </body>
 </html>

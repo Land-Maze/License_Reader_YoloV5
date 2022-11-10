@@ -1,0 +1,39 @@
+{% extends "basic.html" %}
+{% block content %}
+    <div class="container">
+        <div id="record_view_container">
+            <div id="record_view">
+                {% for item in records %}
+                <div class="record_list_item" onClick="switchRecordInfo({{ item.id }})" data-id="{{ item.id }}" data-lic="{{ item.lic_num }}" data-direction="{{ item.in_out }}" data-time="{{ item.date }}" data-camera-id="{{ item.camera_id }}">
+                    <span>{{ item.lic_num }} - {{ item.in_out }} - {{ item.date }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div id="record_view_info">
+                <div id="record_info">
+                    <div>
+                        <span>Id: <span id="record_id_span"></span></span>
+                    </div>
+
+                    <div>
+                        <span>License: <span id="record_lic_span"></span></span>
+                    </div>
+
+                    <div>
+                        <span>Direction: <span id="record_dir_span"></span></span>
+                    </div>
+
+                    <div>
+                        <span>Time: <span id="record_time_span"></span></span>
+                    </div>
+
+                    <div>
+                        <span>Camera Id: <span id="record_cam_span"></span></span>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -23,8 +23,9 @@ urlpatterns = [
     path('video_frames', views.video_frames),
     path('records', views.records),
     path('database', views.database),
-    path('settings', views.settings),
+    # path('settings', views.settings),
     path('video_feed', views.video_feed),
     path('api/license_plate', views.license_plate),
-    path('api/license_record', views.license_records)
+    path('api/license_record', views.license_records),
+    # path('api/settings', views.api_settings),
 ]

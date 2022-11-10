@@ -2,8 +2,43 @@
 {% block content %}
     <div class="container">
         <div id="choices">
-            <button id="btn-license">License</button>
-            <button id="btn-records">Records</button>
+            <button id="btn_license" class="active-choice">License</button>
+            <button id="btn_record">Records</button>
+        </div>
+
+        <div id="choice_content">
+            <div id="licenses" style="display: flex; z-index: 1;">
+                <div id="licenses_list">
+                    {% for item in licenses %}
+                        <div class="license_list_item">
+                            <span>{{ item.number }} -- {{ item.date }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <span id="result_license_span">Result: <span id="result_license_sub_span"></span></span>
+                <input type="text" id="license_number" placeholder="License Number">
+                <div id="choices_license">
+                    <button id="btn_license_create" onClick="createLicenseHandler()">Create</button>
+                    <button id="btn_license_delete" onClick="deleteLicenseHandler()">Delete</button>
+                </div>
+            </div>
+
+            <div id="records" style="display: none; z-index: 2;">
+                <h2>Choose item</h2>
+                <div id="records_list">
+                    {% for item in records%}
+                        <div class="record_list_item" item-id="{{ item.id }} " onClick="switchActiveElementRecord('{{ item.id }}')">
+                            <span>{{ item.id }}. {{ item.license_number }} [{{ item.in_out }}/{{ item.camera_id }}] -- {{ item.date }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <span id="result_record_span">Result: <span id="result_record_sub_span"></span></span>
+                <div id="choices_record">
+                    <button id="btn_record_delete" onClick="deleteRecordHandler()">Delete</button>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

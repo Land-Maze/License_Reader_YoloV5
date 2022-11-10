@@ -1,4 +1,14 @@
 {% extends "basic.html" %}
 {% block content %}
-    
+    <div class='container'>
+        <div id="settings">
+            <input type="text" id="model_path" value="{{ config.MODEL_PATH }}" />
+            <input type="text" id="hub_path" value="{{ config.HUB_PATH }}" />
+            <input type="number" step="0.1" id="conf_tresh" value="{{ config.CONFIDENCE_THRESHOLD }}" />
+            <input type="number" step="0.1" id="ocr_tresh" value={{ config.EASY_OCR_THRESHOLD}} />
+            <input type="number" step="0.1" id="pool_size" value={{ config.POOL_SIZE}} />
+            <input type="number" id="cool_time" value={{ config.COOLDOWN_TIME}} />
+            <button id="Save" onClick="saveButtonHandler()"></button>
+        </div>
+    </div>
 {% endblock %}

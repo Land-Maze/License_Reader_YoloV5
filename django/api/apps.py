@@ -33,6 +33,12 @@ def addPlateRecord(license_number: str, in_out: str, camera_feed_id: int, COOLDO
     
     print("Adding record")
     model.objects.create(license_number=license_istance, in_out=in_out, camera_feed_id=camera_feed_id)
+    # model.objects.update(license_number=license_istance.license_number)
+    from django.utils import timezone
+    import pytz
+    timezone.now()
+    license_istance.last_seen = datetime.now(tz=pytz.UTC)
+    license_istance.save()
 
 
 
@@ -82,8 +88,8 @@ class ApiConfig(AppConfig):
     
     
     def ready(self) -> None:
-        # self.check_frames_thread = threading.Thread(target=check_frames, args=(self.config, self.web_cam, "in", 1), daemon=False)
-        # self.check_frames_thread.start()
+        self.check_frames_thread = threading.Thread(target=check_frames, args=(self.config, self.web_cam, "in", 1), daemon=False)
+        self.check_frames_thread.start()
         return super().ready()
     
         
