@@ -23,13 +23,16 @@ def addPlateRecord(license_number: str, in_out: str, camera_feed_id: int, COOLDO
     from time import mktime, time
     
     license_records_list = list(model.objects.filter(license_number=license_number, in_out=in_out, camera_feed_id=camera_feed_id).values())
-    last_record = license_records_list[-1]
-    
-    last_record_time_unix = int(mktime(last_record['created'].timetuple()))
-    
-    if(time() - last_record_time_unix < COOLDOWN_TIME):
-        print("Cooldown time not passed")
-        return
+
+    if(license_records_list != []):
+
+        last_record = license_records_list[-1]
+
+        last_record_time_unix = int(mktime(last_record['created'].timetuple()))
+
+        if(time() - last_record_time_unix < COOLDOWN_TIME):
+            print("Cooldown time not passed")
+            return
     
     print("Adding record")
     model.objects.create(license_number=license_istance, in_out=in_out, camera_feed_id=camera_feed_id)
